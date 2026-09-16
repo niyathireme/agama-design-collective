@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.pnpm-store/
+
+# Keep original video files locally; store them separately from the Git website repo.
+projects/**/*.mp4
+projects/**/*.MP4
+projects/**/*.mov
+projects/**/*.MOV
+projects/**/*.m4v

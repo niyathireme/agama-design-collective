@@ -1,0 +1,21 @@
+---
+import SiteNav from '../components/SiteNav.astro';
+import '../styles/global.css';
+interface Props { title: string; description: string; navTheme?: 'light' | 'dark'; }
+const { title, description, navTheme = 'light' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4f0e8" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteNav theme={navTheme} />
+    <main id="main"><slot /></main>
+  </body>
+</html>

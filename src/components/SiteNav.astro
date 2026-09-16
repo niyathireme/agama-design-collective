@@ -1,0 +1,73 @@
+---
+interface Props { theme?: 'light' | 'dark'; }
+const { theme = 'light' } = Astro.props;
+---
+
+<header class:list={["site-nav-wrap", `site-nav-wrap--${theme}`]} data-nav>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="/" aria-label="Agama Design Collective, home">
+      <img src="/brand/logo-single.png" alt="Agama Design Collective" width="50" height="50" />
+    </a>
+    <div class="nav-links" id="primary-menu">
+      <a href="/projects">Projects</a>
+      <a href="/studio">Studio</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-menu">
+      <span>Menu</span>
+    </button>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-nav]');
+  const button = header?.querySelector<HTMLButtonElement>('.menu-button');
+  button?.addEventListener('click', () => {
+    const open = header?.classList.toggle('is-open') ?? false;
+    button.setAttribute('aria-expanded', String(open));
+    button.querySelector('span')!.textContent = open ? 'Close' : 'Menu';
+  });
+</script>
+
+<style>
+  .site-nav-wrap {
+    position: fixed;
+    z-index: 50;
+    top: 24px;
+    left: 50%;
+    translate: -50% 0;
+    animation: nav-enter 700ms var(--ease-out) 100ms both;
+  }
+  .site-nav {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 4px 10px 4px 5px;
+    color: var(--field-ink);
+    background: rgba(234, 241, 251, .94);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: none;
+  }
+  .brand { display: grid; place-items: center; width: 62px; min-height: 62px; overflow: hidden; padding: 0; border-radius: 50%; }
+  .brand img { width: 50px; height: 50px; object-fit: contain; mix-blend-mode: multiply; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a { min-height: 44px; display: grid; place-items: center; padding: 0 14px; font-family: var(--font-primary); font-size: 16px; font-weight: 450; border-radius: 12px; }
+  .nav-links a { transition: background-color 180ms ease, color 180ms ease; }
+  .nav-links a:hover { color: var(--field-ink); background: var(--field-green); }
+  .menu-button { display: none; min-width: 62px; min-height: 44px; border: 0; border-radius: 999px; color: inherit; background: transparent; font: inherit; font-size: 15px; font-weight: 620; }
+  @keyframes nav-enter { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: none; } }
+  @media (max-width: 680px) {
+    .site-nav-wrap { top: 14px; width: calc(100% - 28px); }
+    .site-nav { justify-content: space-between; width: 100%; padding-right: 8px; }
+    .brand { width: 54px; min-height: 54px; }
+    .brand img { width: 46px; height: 46px; }
+    .menu-button { display: block; }
+    .nav-links { position: fixed; inset: 78px 0 auto; display: none; flex-direction: column; align-items: stretch; padding: 14px; color: var(--field-ink); background: var(--field-paper); border: 0; border-radius: 18px; box-shadow: none; }
+    .nav-links a { justify-content: start; min-height: 54px; font-size: 24px; font-weight: 650; border-radius: 12px; }
+    .is-open .nav-links { display: flex; animation: menu-enter 240ms var(--ease-out) both; }
+    @keyframes menu-enter { from { opacity: 0; transform: translateY(-8px); } }
+  }
+  @media (prefers-reduced-motion: reduce) { .site-nav-wrap { animation: none; } }
+</style>
