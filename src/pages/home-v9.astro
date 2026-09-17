@@ -1,0 +1,137 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import heroImage from '../assets/ponmily-hero.jpg';
+---
+
+<BaseLayout title="Agama Design Collective — Homepage concept 2" description="Agama Design Collective is a boutique architecture practice in Kozhikode, Kerala." showNav={false}>
+  <section class="hero" aria-labelledby="studio-title">
+    <nav class="concept-switcher" aria-label="Homepage concept switcher">
+      <a href="/">Option 1</a>
+      <span aria-current="page">Option 2</span>
+    </nav>
+
+    <div class="hero-copy">
+      <div class="content-block">
+        <img class="studio-logo" src="/brand/agama-logo-cropped.png" alt="Agama Design Collective logo" width="1797" height="1797" />
+
+        <h1 id="studio-title"><strong>Agama</strong> <span>Design Collective</span></h1>
+
+        <p class="philosophy">Architecture rooted in place, responsive to people,<br class="desktop-break" /> and open to the future.</p>
+
+        <span class="divider" aria-hidden="true"></span>
+
+        <nav class="primary-links" aria-label="Primary navigation">
+          <a href="/projects">View Projects</a>
+          <a href="/contact">Contact Studio</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <Image src={heroImage} alt="" widths={[720, 1080, 1600]} sizes="(max-width: 760px) 100vw, 58vw" loading="eager" fetchpriority="high" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { position: relative; min-height: 100svh; overflow: hidden; background: #fff; }
+  .hero-copy {
+    position: relative; z-index: 2; width: 52%; min-height: 100svh;
+    padding: 42px clamp(36px, 5vw, 96px); display: flex; align-items: center; justify-content: center;
+    transform: translateY(-4vh);
+  }
+  .content-block { width: min(100%, 478px); color: #28251f; }
+  .studio-logo {
+    display: block; width: clamp(112px, 7vw, 133px); height: auto; margin: 0 0 48px;
+    object-fit: contain; mix-blend-mode: multiply; animation: content-in 760ms var(--ease-out) 120ms both;
+  }
+  h1 {
+    margin: 0; font-family: var(--font-primary); font-size: clamp(33px, 2.145vw, 40.7px);
+    font-weight: 400; line-height: 1.08; letter-spacing: -.045em; white-space: nowrap;
+    animation: content-in 760ms var(--ease-out) 250ms both;
+  }
+  h1 strong { font-weight: 670; }
+  h1 span { font-weight: 390; }
+  .philosophy {
+    margin: 17px 0 0; color: #5b5752; font-family: var(--font-primary);
+    font-size: clamp(16px, 1.05vw, 19px); font-weight: 400; line-height: 1.48;
+    letter-spacing: -.008em; animation: content-in 760ms var(--ease-out) 360ms both;
+  }
+  .divider {
+    display: block; width: 100%; height: 1px; margin-top: 38px; background: #e4e0dc;
+    transform-origin: left; animation: line-in 800ms var(--ease-out) 460ms both;
+  }
+  .primary-links {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 13px; margin-top: 41px;
+    animation: content-in 720ms var(--ease-out) 560ms both;
+  }
+  .primary-links a {
+    position: relative; min-height: 22px; color: #613724; font-family: var(--font-primary);
+    font-size: 16px; font-weight: 480; line-height: 1.35; letter-spacing: .025em;
+  }
+  .primary-links a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: currentColor; transform-origin: right; transition: transform 260ms var(--ease-out);
+  }
+  .primary-links a:hover::after { transform: scaleX(.35); }
+  .hero-visual {
+    position: absolute; z-index: 1; inset: 0 0 0 48%; overflow: hidden;
+    clip-path: polygon(13% 0, 100% 0, 100% 100%, 0 100%);
+    background: #172017; animation: image-reveal 1100ms var(--ease-out) 80ms both;
+  }
+  .hero-visual :global(picture), .hero-visual :global(img) { width: 100%; height: 100%; }
+  .hero-visual :global(picture) {
+    display: block; transform-origin: center; animation: image-drift 14s ease-in-out 2s infinite alternate;
+  }
+  .hero-visual :global(img) {
+    display: block; object-fit: cover; object-position: 49% 52%;
+    animation: image-settle 1700ms var(--ease-out) 120ms both;
+  }
+  .concept-switcher {
+    position: fixed; z-index: 20; right: 18px; bottom: 18px; display: flex; gap: 3px;
+    padding: 4px; border-radius: 999px; background: rgba(255,255,255,.88);
+    box-shadow: 0 8px 30px rgba(20,18,15,.12); backdrop-filter: blur(12px);
+    font-family: var(--font-primary); font-size: 14px; color: #282522;
+  }
+  .concept-switcher a, .concept-switcher span {
+    min-height: 36px; padding: 0 13px; border-radius: 999px; display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+  .concept-switcher span { color: #fff; background: #211e1b; }
+  .concept-switcher a:hover { background: #f1efec; }
+  @keyframes content-in { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes line-in { from { opacity: 0; transform: scaleX(0); } }
+  @keyframes image-reveal { from { opacity: 0; clip-path: polygon(100% 0, 100% 0, 100% 100%, 83% 100%); } }
+  @keyframes image-settle { from { transform: scale(1.1); filter: saturate(.78); } to { transform: scale(1.01); filter: none; } }
+  @keyframes image-drift { from { transform: scale(1.01) translate3d(0,0,0); } to { transform: scale(1.035) translate3d(-.6%,-.35%,0); } }
+
+  @media (max-width: 1080px) and (min-width: 761px) {
+    .hero-copy { width: 55%; padding-inline: 34px; }
+    .hero-visual { left: 52%; }
+    .content-block { width: min(100%, 420px); }
+    .studio-logo { width: 112px; margin-bottom: 44px; }
+    h1 { font-size: 31.9px; }
+  }
+  @media (max-width: 760px) {
+    .hero { display: grid; grid-template-rows: 43svh minmax(57svh, auto); }
+    .hero-visual {
+      position: relative; grid-row: 1; inset: auto; width: 100%; height: 43svh;
+      clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .hero-copy { grid-row: 2; width: 100%; min-height: 57svh; padding: 28px 28px 34px; transform: translateY(-1.5vh); }
+    .content-block { width: min(100%, 420px); }
+    .studio-logo { width: 92px; margin: 0 0 24px; }
+    h1 { font-size: clamp(27.5px, 7.48vw, 31.9px); white-space: normal; }
+    .philosophy { margin-top: 12px; font-size: 15px; }
+    .desktop-break { display: none; }
+    .divider { margin-top: 22px; }
+    .primary-links { gap: 9px; margin-top: 20px; }
+    .primary-links a { font-size: 15px; }
+  }
+  @media (max-height: 720px) and (min-width: 761px) {
+    .studio-logo { width: 105px; margin-bottom: 28px; }
+    .divider { margin-top: 27px; }
+    .primary-links { margin-top: 28px; }
+  }
+</style>

@@ -1,4 +1,3 @@
-@import '@fontsource-variable/alan-sans';
 @import '@fontsource-variable/instrument-sans';
 
 :root {
@@ -14,9 +13,9 @@
   --field-green: #75ed91;
   --field-border: #248a50;
   --field-muted: #e7edf7;
-  --field-paper: #eaf1fb;
-  --field-ink: #10203a;
-  --font-primary: 'Alan Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  --field-paper: #ffffff;
+  --field-ink: #151515;
+  --font-primary: 'Instrument Sans Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-sans: 'Instrument Sans Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Instrument Sans Variable', 'Helvetica Neue', Arial, sans-serif;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
