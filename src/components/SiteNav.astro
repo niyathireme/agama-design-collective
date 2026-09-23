@@ -1,23 +1,33 @@
 ---
 interface Props { theme?: 'light' | 'dark'; }
 const { theme = 'light' } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
 <header class:list={["site-nav-wrap", `site-nav-wrap--${theme}`]} data-nav>
   <nav class="site-nav" aria-label="Primary navigation">
     <a class="brand" href="/" aria-label="Agama Design Collective, home">
-      <img src="/brand/logo-single.png" alt="Agama Design Collective" width="50" height="50" />
+      <img src="/brand/logo-single-white.png" alt="Agama Design Collective" width="50" height="50" />
     </a>
     <div class="nav-links" id="primary-menu">
-      <a href="/projects">Projects</a>
-      <a href="/studio">Studio</a>
-      <a href="/contact">Contact</a>
+      <a href="/projects" aria-current={isCurrent('/projects') ? 'page' : undefined}>Projects</a>
+      <a href="/studio" aria-current={isCurrent('/studio') ? 'page' : undefined}>Studio</a>
+      <button class="contact-button" type="button" data-contact-open aria-haspopup="dialog">Contact</button>
     </div>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-menu">
       <span>Menu</span>
     </button>
   </nav>
 </header>
+<div class="contact-backdrop" data-contact-backdrop hidden></div>
+<aside class="contact-sheet" data-contact-sheet role="dialog" aria-modal="true" aria-labelledby="contact-sheet-title" hidden>
+  <button class="contact-close" type="button" data-contact-close aria-label="Close contact panel">×</button>
+  <p>Agama Design Collective</p>
+  <h2 id="contact-sheet-title">Contact the studio.</h2>
+  <address>1/3758-B1, Bilathikulam Road<br />Nadakkavu, Kozhikode 673006</address>
+  <a class="whatsapp-link" href="https://wa.me/918139092123" target="_blank" rel="noreferrer">Message on WhatsApp <span>↗</span></a>
+</aside>
 
 <script>
   const header = document.querySelector<HTMLElement>('[data-nav]');
@@ -27,6 +37,43 @@ const { theme = 'light' } = Astro.props;
     button.setAttribute('aria-expanded', String(open));
     button.querySelector('span')!.textContent = open ? 'Close' : 'Menu';
   });
+  const sheet = document.querySelector<HTMLElement>('[data-contact-sheet]');
+  const backdrop = document.querySelector<HTMLElement>('[data-contact-backdrop]');
+  const openContact = header?.querySelector<HTMLButtonElement>('[data-contact-open]');
+  const closeContact = sheet?.querySelector<HTMLButtonElement>('[data-contact-close]');
+  const setContact = (open:boolean) => {
+    if (!sheet || !backdrop) return;
+    sheet.hidden = !open; backdrop.hidden = !open;
+    requestAnimationFrame(() => { sheet.classList.toggle('is-open', open); backdrop.classList.toggle('is-open', open); });
+    document.documentElement.classList.toggle('contact-open', open);
+    if (open) closeContact?.focus(); else openContact?.focus();
+  };
+  openContact?.addEventListener('click', () => setContact(true));
+  closeContact?.addEventListener('click', () => setContact(false));
+  backdrop?.addEventListener('click', () => setContact(false));
+  window.addEventListener('keydown', (event) => { if (event.key === 'Escape' && sheet?.classList.contains('is-open')) setContact(false); });
+
+  if (header) {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const updateNav = () => {
+      const currentY = window.scrollY;
+      const movingDown = currentY > lastY + 7;
+      const movingUp = currentY < lastY - 7;
+      if (!header.classList.contains('is-open')) {
+        if (movingDown && currentY > 120) header.classList.add('is-hidden');
+        if (movingUp || currentY < 60) header.classList.remove('is-hidden');
+      }
+      lastY = currentY;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNav);
+        ticking = true;
+      }
+    }, { passive: true });
+  }
 </script>
 
 <style>
@@ -37,25 +84,30 @@ const { theme = 'light' } = Astro.props;
     left: 50%;
     translate: -50% 0;
     animation: nav-enter 700ms var(--ease-out) 100ms both;
+    transition: translate 360ms var(--ease-out), opacity 260ms ease;
   }
+  .site-nav-wrap.is-hidden { translate: -50% calc(-100% - 48px); opacity: 0; pointer-events: none; }
   .site-nav {
-    min-height: 70px;
+    min-height: 65px;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 24px;
     padding: 4px 10px 4px 5px;
-    color: #151515;
-    background: rgba(255, 255, 255, .94);
-    border: 0;
-    border-radius: 999px;
-    box-shadow: none;
+    color: #f5f5f1;
+    background: rgba(12, 13, 12, .72);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.12);
+    backdrop-filter: blur(18px);
   }
-  .brand { display: grid; place-items: center; width: 62px; min-height: 62px; overflow: hidden; padding: 0; border-radius: 50%; }
-  .brand img { width: 50px; height: 50px; object-fit: contain; mix-blend-mode: multiply; }
-  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .brand { display: grid; place-items: center; width: 57px; min-height: 57px; overflow: hidden; padding: 0; border-radius: 11px; }
+  .brand img { width: 41px; height: 41px; object-fit: contain; }
+  .nav-links { display: flex; align-items: center; gap: 24px; }
   .nav-links a { min-height: 44px; display: grid; place-items: center; padding: 0 14px; font-family: var(--font-primary); font-size: 16px; font-weight: 450; border-radius: 12px; }
   .nav-links a { transition: background-color 180ms ease, color 180ms ease; }
-  .nav-links a:hover { color: #151515; background: #efefed; }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,.11); }
+  .nav-links a[aria-current="page"] { color:#d39a6c;background:transparent; }
+  .contact-button{min-height:44px;padding:0 17px;border:0;border-radius:10px;color:#211c18;background:#dfb486;font:inherit;font-size:16px;cursor:pointer;transition:background .2s ease,transform .2s ease}.contact-button:hover{background:#d5a573;transform:translateY(-1px)}
   .menu-button { display: none; min-width: 62px; min-height: 44px; border: 0; border-radius: 999px; color: inherit; background: transparent; font: inherit; font-size: 15px; font-weight: 620; }
   @keyframes nav-enter { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: none; } }
   @media (max-width: 680px) {
@@ -64,10 +116,11 @@ const { theme = 'light' } = Astro.props;
     .brand { width: 54px; min-height: 54px; }
     .brand img { width: 46px; height: 46px; }
     .menu-button { display: block; }
-    .nav-links { position: fixed; inset: 78px 0 auto; display: none; flex-direction: column; align-items: stretch; padding: 14px; color: var(--field-ink); background: var(--field-paper); border: 0; border-radius: 18px; box-shadow: none; }
+    .nav-links { position: fixed; inset: 78px 0 auto; display: none; flex-direction: column; align-items: stretch; padding: 14px; color:#f5f5f1;background:rgba(12,13,12,.96);border:1px solid rgba(255,255,255,.12);border-radius:18px;box-shadow:none; }
     .nav-links a { justify-content: start; min-height: 54px; font-size: 24px; font-weight: 650; border-radius: 12px; }
     .is-open .nav-links { display: flex; animation: menu-enter 240ms var(--ease-out) both; }
     @keyframes menu-enter { from { opacity: 0; transform: translateY(-8px); } }
   }
   @media (prefers-reduced-motion: reduce) { .site-nav-wrap { animation: none; } }
+  .contact-backdrop{position:fixed;z-index:70;inset:0;background:rgba(9,10,9,.42);opacity:0;backdrop-filter:blur(3px);transition:opacity .3s ease}.contact-backdrop.is-open{opacity:1}.contact-sheet{position:fixed;z-index:71;top:0;right:0;display:flex;width:min(460px,100%);height:100svh;flex-direction:column;padding:clamp(32px,5vw,64px);color:#f4f0e8;background:#354438;transform:translateX(100%);transition:transform .48s var(--ease-out)}.contact-sheet.is-open{transform:none}.contact-sheet[hidden],.contact-backdrop[hidden]{display:none}.contact-close{align-self:flex-end;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;background:transparent;font-size:28px;cursor:pointer}.contact-sheet>p{margin:auto 0 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}.contact-sheet h2{max-width:8ch;margin:0;font-size:clamp(44px,6vw,74px);font-weight:500;line-height:.94;letter-spacing:-.05em}.contact-sheet address{margin:42px 0 0;font-style:normal;font-size:16px;line-height:1.65}.whatsapp-link{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding:18px 20px;border-radius:10px;color:#211c18;background:#dfb486;font-weight:560}.contact-open{overflow:hidden}
 </style>

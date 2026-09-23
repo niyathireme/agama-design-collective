@@ -1,10 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeLoader from '../components/HomeLoader.astro';
 import heroImage from '../assets/ponmily-hero.jpg';
 ---
 
 <BaseLayout title="Agama Design Collective — Architecture rooted in place" description="Agama Design Collective is a boutique architecture practice in Kozhikode, Kerala." showNav={false}>
+  <HomeLoader />
   <section class="hero" aria-labelledby="studio-title">
     <nav class="concept-switcher" aria-label="Homepage concept switcher">
       <span aria-current="page">Option 1</span>
@@ -17,7 +19,7 @@ import heroImage from '../assets/ponmily-hero.jpg';
       </div>
       <p class="philosophy">Architecture rooted in place, responsive to people,<br class="desktop-break" /> and open to the future.</p>
       <div class="hero-actions" aria-label="Primary actions">
-        <a class="button button--contact" href="/contact">Contact us</a>
+        <a class="button button--contact" href="https://wa.me/918139092123" target="_blank" rel="noreferrer">Contact us</a>
         <a class="button button--studio" href="/studio">
           <span>Explore the studio</span>
           <svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
